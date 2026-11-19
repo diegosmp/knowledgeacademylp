@@ -21,13 +21,12 @@ export async function POST(request: Request) {
       subject: `Novo lead na Lista VIP: ${body.whatsapp}`,
       html: `
         <h2>Novo professor na Lista VIP!</h2>
+        <p><strong>Nome:</strong> ${body.name}</p>
         <p><strong>WhatsApp:</strong> ${body.whatsapp}</p>
         <p><strong>Link direto:</strong> <a href="https://wa.me/55${cleanPhone}">Abrir conversa no WhatsApp</a></p>
         <p><strong>Data:</strong> ${new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}</p>
       `,
     })
-
-    // Opcional: se quiser também salvar em planilha via n8n/Make, basta descomentar:
     // await fetch(process.env.WEBHOOK_WAITLIST_URL!, {
     //   method: 'POST',
     //   headers: { 'Content-Type': 'application/json' },

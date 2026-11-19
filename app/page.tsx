@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react"
 import { Bell, CheckCircle2, Sparkles, MessageCircle } from "lucide-react"
+import Link from "next/link"
 
 //(Formato ISO com fuso de Brasília -03:00)
 const LAUNCH_DATE = new Date("2026-12-19T10:00:00-03:00").getTime()
@@ -44,6 +45,7 @@ const formatWhatsApp = (value: string): string => {
 export default function ComingSoonPage() {
   const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null)
   const [whatsapp, setWhatsapp] = useState("")
+  const [name, setName] = useState("")
   const [error, setError] = useState("")
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -68,7 +70,7 @@ export default function ComingSoonPage() {
     setWhatsapp(formatWhatsApp(e.target.value))
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault()
     const cleanDigits = whatsapp.replace(/\D/g, "")
 
@@ -84,7 +86,7 @@ export default function ComingSoonPage() {
       const response = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ whatsapp }),
+        body: JSON.stringify({ whatsapp, name }),
       })
 
       if (!response.ok) {
@@ -106,12 +108,14 @@ export default function ComingSoonPage() {
     <div className="min-h-screen flex flex-col justify-between bg-linear-to-b from-[#5CBCE2] via-[#3eb1df] to-[#E8E3FF] text-white selection:bg-[#FCF800] selection:text-black">
       {/* Barra Superior com Quinia Retro (font-logo) */}
       <header className="w-full py-6 px-6 flex justify-center">
-        <div className="font-logo flex items-center gap-2 text-2xl sm:text-3xl tracking-wide">
-          <span className="text-white">Knowledge</span>
-          <span className="bg-[#FCF800] text-black px-3 py-0.5 rounded-lg text-xl sm:text-2xl">
-            Academy
-          </span>
-        </div>
+        <Link href={"/"}>
+          <div className="font-logo flex items-center gap-2 text-2xl sm:text-3xl tracking-wide">
+            <span className="text-white">Knowledge</span>
+            <span className="bg-[#FCF800] text-black px-3 py-0.5 rounded-lg text-xl sm:text-2xl">
+              Academy
+            </span>
+          </div>
+        </Link>
       </header>
 
       {/* Conteúdo Central */}
@@ -193,6 +197,29 @@ export default function ComingSoonPage() {
                 plano gratuito.
               </p>
               <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+                <div>
+                  <input
+                    type="tel"
+                    inputMode="numeric"
+                    autoComplete="tel"
+                    maxLength={15}
+                    required
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Digite seu nome e sobre nome"
+                    className={`w-full px-4 py-3.5 rounded-full border text-sm transition-colors focus:outline-none focus:ring-2 ${
+                      error
+                        ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                        : "border-zinc-300 focus:border-[#6410C9] focus:ring-[#6410C9]/20"
+                    }`}
+                  />
+                  {error && (
+                    <p className="text-xs text-red-600 font-semibold mt-1.5 text-left pl-4">
+                      {error}
+                    </p>
+                  )}
+                </div>
+
                 <div>
                   <input
                     type="tel"
