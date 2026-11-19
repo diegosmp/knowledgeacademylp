@@ -46,6 +46,7 @@ export default function ComingSoonPage() {
   const [whatsapp, setWhatsapp] = useState("")
   const [error, setError] = useState("")
   const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const initialTick = setTimeout(() => {
@@ -67,7 +68,7 @@ export default function ComingSoonPage() {
     setWhatsapp(formatWhatsApp(e.target.value))
   }
 
-  const handleSubmit = (e: React.SubmitEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const cleanDigits = whatsapp.replace(/\D/g, "")
 
@@ -76,9 +77,27 @@ export default function ComingSoonPage() {
       return
     }
 
-    setSubmitted(true)
-    setWhatsapp("")
-    setError("")
+    try {
+      setLoading(true)
+      setError("")
+
+      const response = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ whatsapp }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Falha ao cadastrar")
+      }
+
+      setSubmitted(true)
+      setWhatsapp("")
+    } catch {
+      setError("Erro ao enviar. Tente novamente em instantes.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   const formatNumber = (num: number) => String(num).padStart(2, "0")
@@ -199,10 +218,13 @@ export default function ComingSoonPage() {
 
                 <button
                   type="submit"
+                  disabled={loading}
                   className="w-full bg-[#FCF800] hover:bg-[#f2ee00] active:scale-[0.99] transition-all text-black font-extrabold py-3.5 px-6 rounded-full flex items-center justify-center gap-2 shadow-md cursor-pointer"
                 >
                   <Bell className="w-4 h-4" />
-                  <span>Avise-me na inauguração</span>
+                  <span>
+                    {loading ? "Salvando..." : "Avise-me na inauguração"}
+                  </span>
                 </button>
               </form>
               <p className="text-xs text-zinc-500 mt-3">
