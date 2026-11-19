@@ -215,7 +215,7 @@ export default function ComingSoonPage() {
 
       {/* Botão Flutuante WhatsApp Expansível */}
       <a
-        href="https://wa.me/5585999999999?text=Ol%C3%A1!%20Gostaria%20de%20saber%20mais%20sobre%20a%20inaugura%C3%A7%C3%A3o%20da%20Knowledge%20Academy."
+        href="https://wa.me/5585991499686?text=Ol%C3%A1!%20Gostaria%20de%20saber%20mais%20sobre%20a%20inaugura%C3%A7%C3%A3o%20da%20Knowledge%20Academy."
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Tirar dúvidas no WhatsApp"
